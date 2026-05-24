@@ -22,7 +22,7 @@ app.get("/audio", async (req, res) => {
     if (!videoId) return res.status(400).json({ error: "URL tidak valid" });
 
     // Pakai Invidious API publik
-    const apiUrl = `https://inv.nadeko.net/api/v1/videos/${videoId}`;
+    const apiUrl = `https://invidious.nerdvpn.de/api/v1/videos/${videoId}`;
     const response = await fetch(apiUrl);
     const data = await response.json();
 
