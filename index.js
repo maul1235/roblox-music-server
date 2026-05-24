@@ -24,13 +24,29 @@ app.get("/search", async (req, res) => {
       id: track.id,
       title: track.title,
       artist: track.artist.name,
-      preview: track.preview,
+      preview: `https://roblox-music-server-production.up.railway.app/proxy?url=${encodeURIComponent(track.preview)}`,
       cover: track.album.cover_medium,
     }));
 
     res.json({ tracks });
   } catch (err) {
     res.status(500).json({ error: "Gagal: " + err.message });
+  }
+});
+
+// Proxy audio dari Deezer
+app.get("/proxy", async (req, res) => {
+  const url = req.query.url;
+  if (!url) return res.status(400).json({ error: "URL diperlukan" });
+
+  try {
+    const response = await fetch(url);
+    const buffer = await response.arrayBuffer();
+    res.setHeader("Content-Type", "audio/mpeg");
+    res.setHeader("Content-Length", buffer.byteLength);
+    res.send(Buffer.from(buffer));
+  } catch (err) {
+    res.status(500).json({ error: "Proxy gagal: " + err.message });
   }
 });
 
